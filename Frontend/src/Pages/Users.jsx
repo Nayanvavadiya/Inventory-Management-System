@@ -1,23 +1,39 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {
-  createUser,
+  adminCreateUser,
   getAllUsers,
   deleteUser
 } from "../Service/userApi";
+import DeleteConfirmModal from "../components/DeleteConfirmModal";
 
 
-function Users() {
+import Sidebar from "../components/Sidebar";
+import Topbar from "../components/Topbar";
+
+function Users({ isSubComponent = false }) {
+  const navigate = useNavigate();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   const [users, setUsers] = useState([]);
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
-    mobile: ""
+    mobile: "",
+    password: ""
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [searchNumber, setSearchNumber] = useState("");
   const [sortOrder, setSortOrder] = useState(""); // "", "asc", "desc"
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
 
 
   // Fetch users
@@ -50,91 +66,171 @@ function Users() {
     e.preventDefault();
     setError("");
 
-    if (!formData.fullName || !formData.email || !formData.mobile) {
+    if (!formData.fullName || !formData.email || !formData.mobile || !formData.password) {
       setError("All fields are required");
       return;
     }
 
-    createUser(formData).then(() => {
+    // Full Name validation: No numbers allowed
+    if (/\d/.test(formData.fullName)) {
+      setError("Full Name cannot contain numbers");
+      return;
+    }
+
+    // Mobile validation: Only numbers allowed and exactly 10 digits
+    if (/[^\d]/.test(formData.mobile)) {
+      setError("Mobile number must contain only digits");
+      return;
+    }
+    if (formData.mobile.length !== 10) {
+      setError("Mobile number must be exactly 10 digits");
+      return;
+    }
+
+    adminCreateUser(formData).then(() => {
       fetchUsers();
-      setFormData({ fullName: "", email: "", mobile: "" });
+      setFormData({ fullName: "", email: "", mobile: "", password: "" });
     }).catch((err) => {
-      console.error("createUser failed:", err?.response || err);
+      console.error("adminCreateUser failed:", err?.response || err);
       const msg = err?.response?.data?.message || err?.message || "Failed to create user";
       setError(msg);
     });
   };
 
   // Delete user
-  const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
-      deleteUser(id).then(() => {
+  const handleDelete = (user) => {
+    setUserToDelete(user);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (userToDelete) {
+      deleteUser(userToDelete._id).then(() => {
         fetchUsers();
+        setIsDeleteModalOpen(false);
+        setUserToDelete(null);
       }).catch((err) => {
         console.error("deleteUser failed", err);
         setError("Failed to delete user");
+        setIsDeleteModalOpen(false);
       });
     }
   };
 
+  const user = JSON.parse(localStorage.getItem("user")) || {};
+  const isAdmin = user.role === "Admin";
+
+  const mainContainerClass = isSubComponent
+    ? "w-full"
+    : "flex h-screen bg-[#f0f5f9] overflow-hidden font-sans text-slate-900";
+
   return (
-    <div className="space-y-6">
-      {/* Add User Form */}
-      <div className="card">
-        <h3 className="text-2xl font-bold text-gray-800 mb-6">Add New User</h3>
+    <div className={mainContainerClass}>
+      {/* Sidebar (Responsive) */}
+      {!isSubComponent && (
+        <div className={`fixed inset-y-0 left-0 z-30 transform transition-transform duration-300 lg:translate-x-0 lg:static lg:inset-auto ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+          <Sidebar />
+        </div>
+      )}
 
-        {error && (
-          <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
-            {error}
-          </div>
-        )}
+      {/* Overlay for mobile sidebar */}
+      {!isSubComponent && isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-20 lg:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        ></div>
+      )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="form-group">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-              <input
-                name="fullName"
-                placeholder="Enter full name"
-                value={formData.fullName}
-                onChange={handleChange}
-                className="input-field"
-                required
-              />
+      {/* Main Content */}
+      <div className={isSubComponent ? "w-full" : "flex-1 flex flex-col min-w-0 overflow-hidden"}>
+        {!isSubComponent && <Topbar toggleSidebar={toggleSidebar} />}
+
+        <main className={isSubComponent ? "overflow-visible" : "flex-1 overflow-x-hidden overflow-y-auto bg-transparent p-6 md:p-8"}>
+          <div className="space-y-6">
+            {!isSubComponent && (
+              <div className="flex items-center mb-4">
+                <button
+                  onClick={() => navigate(-1)}
+                  className="flex items-center px-4 py-2 bg-white text-gray-700 rounded-xl hover:bg-gray-50 transition-all font-semibold group cursor-pointer border border-gray-200 shadow-sm hover:shadow-md hover:border-blue-300"
+                >
+                  <div className="bg-blue-50 p-1.5 rounded-lg mr-3 group-hover:bg-blue-100 transition-colors">
+                    <ArrowBackIcon fontSize="small" className="text-blue-600 group-hover:-translate-x-1 transition-transform" />
+                  </div>
+                  <span className="text-sm">Go Back</span>
+                </button>
+              </div>
+            )}
+
+      {/* Add User Form - Only for Admin and NOT in subcomponent mode */}
+      {isAdmin && !isSubComponent && (
+        <div className="card">
+          <h3 className="text-2xl font-bold text-gray-800 mb-6">Add New User</h3>
+
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="form-group">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                <input
+                  name="fullName"
+                  placeholder="Enter full name"
+                  value={formData.fullName}
+                  onChange={handleChange}
+                  className="input-field"
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                <input
+                  name="email"
+                  type="email"
+                  placeholder="Enter email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="input-field"
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Mobile</label>
+                <input
+                  name="mobile"
+                  placeholder="Enter mobile"
+                  value={formData.mobile}
+                  onChange={handleChange}
+                  className="input-field"
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                <input
+                  name="password"
+                  type="password"
+                  placeholder="Enter password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="input-field"
+                  required
+                />
+              </div>
             </div>
-            <div className="form-group">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-              <input
-                name="email"
-                type="email"
-                placeholder="Enter email"
-                value={formData.email}
-                onChange={handleChange}
-                className="input-field"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Mobile</label>
-              <input
-                name="mobile"
-                placeholder="Enter mobile"
-                value={formData.mobile}
-                onChange={handleChange}
-                className="input-field"
-                required
-              />
-            </div>
-          </div>
-          <button type="submit" className="btn-primary w-full md:w-auto">
-            Add User
-          </button>
-        </form>
-      </div>
+            <button type="submit" className="btn-primary w-full md:w-auto">
+              Add User
+            </button>
+            {error && (
+              <p className="mt-4 text-red-500 text-sm font-semibold italic">
+                * {error}
+              </p>
+            )}
+          </form>
+        </div>
+      )}
 
       {/* Users List */}
-      <div className="card">
-        <h3 className="text-2xl font-bold text-gray-800 mb-6">Users List</h3>
+      <div className={isSubComponent ? "bg-white" : "card"}>
+        {!isSubComponent && <h3 className="text-2xl font-bold text-gray-800 mb-6">Users List</h3>}
 
         {loading ? (
           <div className="text-center py-8">
@@ -142,42 +238,42 @@ function Users() {
           </div>
         ) : users.length === 0 ? (
           <div className="text-center py-8">
-            <p className="text-gray-500">No users found. Add one to get started.</p>
+            <p className="text-gray-500">No users found.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <input
-              className="px-4 py-2 border border-gray-300 rounded-lg w-full md:w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              style={{ marginRight: '14px' }}
-              type="text"
-              placeholder="Search by name..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <input
-              className="mb-4 px-4 py-2 border border-gray-300 rounded-lg w-full md:w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              type="text"
-              placeholder="Search by mobile number..."
-              value={searchNumber}
-              onChange={(e) => setSearchNumber(e.target.value)}
-            />
-            <select
-              className="mb-4 px-4 py-2 border border-gray-300 rounded-lg w-full md:w-1/4 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-              value={sortOrder}
-              onChange={(e) => setSortOrder(e.target.value)}
-            >
-              <option value="">Sort by Name (Default)</option>
-              <option value="asc">A - Z</option>
-              <option value="desc">Z - A</option>
-            </select>
+            <div className="flex flex-col md:flex-row mb-4 gap-4">
+              <input
+                className="px-4 py-2 border border-gray-300 rounded-lg w-full md:w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                type="text"
+                placeholder="Search by name..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <input
+                className="px-4 py-2 border border-gray-300 rounded-lg w-full md:w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                type="text"
+                placeholder="Search by mobile..."
+                value={searchNumber}
+                onChange={(e) => setSearchNumber(e.target.value)}
+              />
+              <select
+                className="px-4 py-2 border border-gray-300 rounded-lg w-full md:w-1/3 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                value={sortOrder}
+                onChange={(e) => setSortOrder(e.target.value)}
+              >
+                <option value="">Sort by Name (Default)</option>
+                <option value="asc">A - Z</option>
+                <option value="desc">Z - A</option>
+              </select>
+            </div>
             <table className="w-full">
-
               <thead className="bg-gray-100 border-b border-gray-200">
                 <tr>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Name</th>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Email</th>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Mobile</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Action</th>
+                  {isAdmin && <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Action</th>}
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
@@ -203,20 +299,31 @@ function Users() {
                       <td className="px-6 py-4 text-sm text-gray-800 font-medium">{user.fullName}</td>
                       <td className="px-6 py-4 text-sm text-gray-600">{user.email}</td>
                       <td className="px-6 py-4 text-sm text-gray-600">{user.mobile}</td>
-                      <td className="px-6 py-4 text-sm">
-                        <button
-                          onClick={() => handleDelete(user._id)}
-                          className="btn-danger text-sm py-1 px-3"
-                        >
-                          Delete
-                        </button>
-                      </td>
+                      {isAdmin && (
+                        <td className="px-6 py-4 text-sm">
+                          <button
+                            onClick={() => handleDelete(user)}
+                            className="btn-danger text-sm py-1 px-3 cursor-pointer"
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      )}
                     </tr>
                   ))}
               </tbody>
             </table>
           </div>
         )}
+      </div>
+      <DeleteConfirmModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+        userName={userToDelete?.fullName}
+      />
+          </div>
+        </main>
       </div>
     </div>
   );

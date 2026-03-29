@@ -28,8 +28,23 @@ const userSchema = new mongoose.Schema(
     location: {
       type: String,
     },
+    username: {
+      type: String,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    otp: {
+      type: String,
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    }
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("User", userSchema);
+// module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model("User", userSchema, "Users");

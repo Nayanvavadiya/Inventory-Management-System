@@ -1,7 +1,23 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import LogoutConfirmModal from "./LogoutConfirmModal";
 
 function Navbar() {
+  const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+
+  const handleLogoutClick = () => {
+    setIsLogoutModalOpen(true);
+  };
+
+  const handleConfirmLogout = () => {
+    localStorage.removeItem("user");
+    setIsLogoutModalOpen(false);
+    navigate("/");
+  };
+
   return (
     <nav className="bg-[#1E293B] shadow-lg sticky top-0 z-50 border-b border-white/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -18,28 +34,31 @@ function Navbar() {
           </div>
 
           <div className="flex space-x-6 items-center">
-            {[
-              { label: 'Home', path: '/dashboard' },
-              { label: 'Profile', path: '/profile', special: true },
-              { label: 'Login', path: '/' },
-              { label: 'Sign Up', path: '/signup' }
-            ].map((link) => (
-              <Link
-                key={link.label}
-                to={link.path}
-                className={`
-                  text-[13px] font-bold uppercase tracking-wider transition-all duration-300
-                  ${link.special
-                    ? 'bg-[#534BB3] text-white px-5 py-2 rounded-xl hover:bg-[#433A9B] hover:shadow-[0_4px_15px_rgba(83,75,179,0.3)] shadow-[0_2px_10px_rgba(83,75,179,0.2)]'
-                    : 'text-slate-300 hover:text-white hover:translate-y-[-1px]'}
-                `}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {user ? (
+              <>
+                <Link to="/dashboard" className="text-slate-300 hover:text-white text-[13px] font-bold uppercase tracking-wider transition-all">Home</Link>
+                <Link to="/profile" className="bg-[#534BB3] text-white px-5 py-2 rounded-xl hover:bg-[#433A9B] text-[13px] font-bold uppercase tracking-wider transition-all shadow-[0_2px_10px_rgba(83,75,179,0.2)]">Profile</Link>
+                <button
+                  onClick={handleLogoutClick}
+                  className="text-red-400 hover:text-red-300 text-[13px] font-bold uppercase tracking-wider transition-all cursor-pointer"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to="/" className="text-slate-300 hover:text-white text-[13px] font-bold uppercase tracking-wider transition-all">Login</Link>
+                <Link to="/signup" className="text-slate-300 hover:text-white text-[13px] font-bold uppercase tracking-wider transition-all">Sign Up</Link>
+              </>
+            )}
           </div>
         </div>
       </div>
+      <LogoutConfirmModal
+        isOpen={isLogoutModalOpen}
+        onClose={() => setIsLogoutModalOpen(false)}
+        onConfirm={handleConfirmLogout}
+      />
     </nav>
   );
 }

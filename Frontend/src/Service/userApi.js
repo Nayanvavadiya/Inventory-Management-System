@@ -7,6 +7,11 @@ export const createUser = (userData) => {
   return axios.post(`${API_URL}/create`, userData);
 };
 
+// Admin create user (No OTP)
+export const adminCreateUser = (userData) => {
+  return axios.post(`${API_URL}/admin/create`, userData);
+};
+
 // Get all users
 export const getAllUsers = () => {
   return axios.get(API_URL);
@@ -20,4 +25,9 @@ export const updateUser = (id, userData) => {
 // Delete user
 export const deleteUser = (id) => {
   return axios.delete(`${API_URL}/${id}`);
+};
+
+// Verify OTP
+export const verifyOTP = (otpData) => {
+  return axios.post(`${API_URL}/verify`, otpData);
 };
