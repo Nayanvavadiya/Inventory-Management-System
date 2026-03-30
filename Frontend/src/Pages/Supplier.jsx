@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateSupplier, deleteSupplier } from '../store/slices/supplierSlice';
+import { addSupplier, updateSupplier, deleteSupplier } from '../store/slices/supplierSlice';
 import Sidebar from '../components/Sidebar';
 import Topbar from '../components/Topbar';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
@@ -8,6 +8,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import AddSupplierModal from '../components/AddSupplierModal';
 import EditSupplierModal from '../components/EditSupplierModal';
 import DeleteSupplierModal from '../components/DeleteSupplierModal';
 
@@ -30,12 +31,17 @@ const Supplier = () => {
     const isAdmin = user.role === 'Admin';
     const dispatch = useDispatch();
 
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedSupplier, setSelectedSupplier] = useState(null);
 
     // Get suppliers from Redux
     const { suppliers } = useSelector((state) => state.supplier);
+
+    const handleAddSupplier = (newSupplier) => {
+        dispatch(addSupplier(newSupplier));
+    };
 
     const handleEditClick = (supplier) => {
         if (!isAdmin) return;
@@ -92,7 +98,11 @@ const Supplier = () => {
                                 <p className="text-sm text-gray-500">Manage your suppliers and their details</p>
                             </div>
                         </div>
-                        <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2.5 rounded-lg flex items-center text-sm font-medium transition-colors shadow-sm">
+                        <button 
+                            onClick={() => isAdmin && setIsAddModalOpen(true)}
+                            disabled={!isAdmin}
+                            className={`px-4 py-2.5 rounded-lg flex items-center text-sm font-medium transition-colors shadow-sm ${isAdmin ? 'bg-green-600 hover:bg-green-700 text-white cursor-pointer' : 'bg-green-600/60 text-white cursor-not-allowed'}`}
+                        >
                             <AddIcon style={{ fontSize: 18, marginRight: 6 }} /> Add Supplier
                         </button>
                     </div>
@@ -229,6 +239,12 @@ const Supplier = () => {
                     </div>
                 </main>
             </div>
+
+            <AddSupplierModal
+                isOpen={isAddModalOpen}
+                onClose={() => setIsAddModalOpen(false)}
+                onAdd={handleAddSupplier}
+            />
 
             <EditSupplierModal
                 isOpen={isEditModalOpen}

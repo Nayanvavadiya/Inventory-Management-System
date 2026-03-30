@@ -43,7 +43,8 @@ function Profile() {
       if (response.data.success) {
         const fullUpdatedUser = {
           ...localUser,
-          ...response.data.data
+          ...response.data.data,
+          role: localUser.role // Preserve the existing role to keep sidebar visible
         };
 
         // Update local state and storage

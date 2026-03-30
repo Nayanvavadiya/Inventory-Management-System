@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { updatePurchase, deletePurchase } from '../store/slices/purchaseSlice';
+import { addPurchase, updatePurchase, deletePurchase } from '../store/slices/purchaseSlice';
 import Sidebar from '../components/Sidebar';
 import Topbar from '../components/Topbar';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -9,6 +9,7 @@ import AddIcon from '@mui/icons-material/Add';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
+import AddPurchaseModal from '../components/AddPurchaseModal';
 import EditPurchaseModal from '../components/EditPurchaseModal';
 import DeletePurchaseModal from '../components/DeletePurchaseModal';
 
@@ -31,12 +32,17 @@ const Purchase = () => {
     const isAdmin = user.role === 'Admin';
     const dispatch = useDispatch();
 
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedPurchase, setSelectedPurchase] = useState(null);
 
     // Get purchases from Redux
     const { purchases } = useSelector((state) => state.purchase);
+
+    const handleAddPurchase = (newPurchase) => {
+        dispatch(addPurchase(newPurchase));
+    };
 
     const handleEditClick = (purchase) => {
         if (!isAdmin) return;
@@ -93,7 +99,11 @@ const Purchase = () => {
                                 <p className="text-sm text-gray-500">{purchases.length} purchases recorded</p>
                             </div>
                         </div>
-                        <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg flex items-center text-sm font-medium transition-colors shadow-sm">
+                        <button 
+                            onClick={() => isAdmin && setIsAddModalOpen(true)}
+                            disabled={!isAdmin}
+                            className={`px-5 py-2.5 rounded-lg flex items-center text-sm font-medium transition-colors shadow-sm ${isAdmin ? 'bg-indigo-600 hover:bg-indigo-700 text-white cursor-pointer' : 'bg-indigo-600/60 text-white cursor-not-allowed'}`}
+                        >
                             <AddIcon style={{ fontSize: 18, marginRight: 6 }} /> New Purchase
                         </button>
                     </div>
@@ -220,11 +230,15 @@ const Purchase = () => {
                             ))}
 
                         {/* New Purchase Empty Card */}
-                        <button className="bg-gray-50 rounded-xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center min-h-[400px] h-full hover:bg-white hover:border-indigo-300 hover:shadow-md transition-all group cursor-pointer group">
-                            <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white text-gray-400 transition-all mb-4">
+                        <button 
+                            onClick={() => isAdmin && setIsAddModalOpen(true)}
+                            disabled={!isAdmin}
+                            className={`rounded-xl border-2 border-dashed flex flex-col items-center justify-center min-h-[400px] h-full transition-all group ${isAdmin ? 'bg-gray-50 border-gray-200 hover:bg-white hover:border-indigo-300 hover:shadow-md cursor-pointer' : 'bg-gray-50/50 border-gray-200/50 cursor-not-allowed opacity-60'}`}
+                        >
+                            <div className={`w-14 h-14 rounded-full bg-white flex items-center justify-center shadow-sm transition-all mb-4 ${isAdmin ? 'group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white text-gray-400' : 'text-gray-300'}`}>
                                 <AddIcon style={{ fontSize: 28 }} />
                             </div>
-                            <span className="text-sm font-bold text-gray-500 group-hover:text-gray-900 transition-colors uppercase tracking-widest">New Purchase</span>
+                            <span className={`text-sm font-bold uppercase tracking-widest transition-colors ${isAdmin ? 'text-gray-500 group-hover:text-gray-900' : 'text-gray-400'}`}>New Purchase</span>
                         </button>
                     </div>
 
@@ -239,6 +253,12 @@ const Purchase = () => {
                     )}
                 </main>
             </div>
+
+            <AddPurchaseModal
+                isOpen={isAddModalOpen}
+                onClose={() => setIsAddModalOpen(false)}
+                onAdd={handleAddPurchase}
+            />
 
             <EditPurchaseModal
                 isOpen={isEditModalOpen}
