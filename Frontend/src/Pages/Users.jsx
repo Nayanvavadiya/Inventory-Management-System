@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from 'react-redux';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {
   adminCreateUser,
@@ -35,6 +36,21 @@ function Users({ isSubComponent = false }) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
 
+  const { products } = useSelector((state) => state.product);
+  const { suppliers } = useSelector((state) => state.supplier);
+  const { categories } = useSelector((state) => state.category);
+  const { purchases } = useSelector((state) => state.purchase);
+  const { outgoingRecords } = useSelector((state) => state.outgoing);
+
+  const inventoryStats = [
+    { label: 'Products', value: products.length, color: 'bg-blue-500' },
+    { label: 'Suppliers', value: suppliers.length, color: 'bg-purple-500' },
+    { label: 'Purchases', value: purchases.length, color: 'bg-green-500' },
+    { label: 'Outgoing', value: outgoingRecords.length, color: 'bg-orange-500' },
+    { label: 'Categories', value: categories.length, color: 'bg-teal-500' },
+  ];
+
+  const highestValue = Math.max(...inventoryStats.map((stat) => stat.value), 1);
 
   // Fetch users
   const fetchUsers = () => {
@@ -316,6 +332,58 @@ function Users({ isSubComponent = false }) {
           </div>
         )}
       </div>
+
+      {/* Users Analysis Dashboard */}
+      {!isSubComponent && (
+        <section className="space-y-6 mt-6">
+          <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-6">
+            <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900">Inventory Analysis</h2>
+                <p className="mt-2 text-sm text-slate-500">
+                  Number of products, suppliers, purchase records, outgoing records and categories.
+                </p>
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full lg:w-auto">
+                {inventoryStats.slice(0, 3).map((stat) => (
+                  <div key={stat.label} className="rounded-2xl bg-slate-50 p-4 border border-slate-200">
+                    <p className="text-xs text-slate-500 uppercase tracking-[0.18em] font-semibold">{stat.label}</p>
+                    <p className="mt-3 text-2xl font-bold text-slate-900">{stat.value}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-6 bg-slate-50 rounded-3xl p-6 border border-slate-200">
+              <div className="flex items-center justify-between mb-5">
+                <div>
+                  <p className="text-sm text-slate-500 uppercase tracking-[0.18em] font-semibold">Inventory counts</p>
+                  <h3 className="text-lg font-semibold text-slate-900 mt-1">Comparison chart</h3>
+                </div>
+                <span className="text-sm text-slate-500">Largest value scaled to 100%</span>
+              </div>
+
+              <div className="space-y-4">
+                {inventoryStats.map((stat) => (
+                  <div key={stat.label}>
+                    <div className="flex items-center justify-between text-sm text-slate-700 mb-2">
+                      <span>{stat.label}</span>
+                      <span className="font-semibold">{stat.value}</span>
+                    </div>
+                    <div className="h-3 rounded-full bg-slate-200 overflow-hidden">
+                      <div
+                        className={`${stat.color} h-full rounded-full transition-all duration-500`}
+                        style={{ width: `${(stat.value / highestValue) * 100}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       <DeleteConfirmModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
