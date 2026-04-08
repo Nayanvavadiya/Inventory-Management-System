@@ -89,15 +89,16 @@ It allows users to perform CRUD operations on inventory items and manage data ef
 
 ## 🔗 API Endpoints
 
-| Method | Endpoint | Description |
-|--------|--------|-------------|
-| POST | `/api/users/create` | Create item |
-| GET | `/api/users/` | Get all items |
-| GET | `/api/users/:id` | Get single item |
-| PUT | `/api/users/:id` | Update item |
-| DELETE | `/api/users/:id` | Delete item |
+| Method | Endpoint           | Description      |
+|--------|--------------------|------------------|
+| POST   | /api/users/create  | Create item      |
+| GET    | /api/users         | Get all items    |
+| GET    | /api/users/:id     | Get single item  |
+| PUT    | /api/users/:id     | Update item      |
+| DELETE | /api/users/:id     | Delete item      |
 
 ---
+
 
 ## ⚙️ Installation & Setup
 
