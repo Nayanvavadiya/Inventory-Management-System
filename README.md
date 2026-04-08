@@ -71,3 +71,22 @@ cd frontend
 npm install
 npm run dev
 ```
+
+## 📸 Screenshot
+
+### Dashboard
+<img width="2880" height="2114" alt="Dashboard" src="https://github.com/user-attachments/assets/970f5b0c-db8f-4daf-8a75-d224659b437b" />
+
+### Products
+<img width="2880" height="2114" alt="Products" src="https://github.com/user-attachments/assets/c582bb61-8c56-43a7-8313-bfb9cd81e6fc" />
+
+### Customers 
+<img width="1895" height="910" alt="image" src="https://github.com/user-attachments/assets/82a18d54-a832-460b-8d5e-5b97df81a918" />
+
+### Supplier
+<img width="2880" height="2114" alt="localhost_5173_supplier" src="https://github.com/user-attachments/assets/7e436fbc-5758-4465-8dd4-26f92d085f02" />
+
+### Profile page 
+<img width="5120" height="3624" alt="localhost_5173_users" src="https://github.com/user-attachments/assets/d498336b-356d-47b6-9fc5-7b4cc7d41713" />
+
+
