@@ -17,7 +17,7 @@ function Login() {
         setError("");
 
         if (!email) {
-            setError("Please enter the username");
+            setError("Please enter the email");
             return;
         }
 
@@ -54,7 +54,6 @@ function Login() {
                         fullName: foundAdmin?.fullName || "Admin",
                         email: email,
                         mobile: foundAdmin?.mobile || "",
-                        username: foundAdmin?.username || "admin",
                         role: "Admin"
                     };
                     localStorage.setItem("user", JSON.stringify(adminUser));
@@ -89,7 +88,6 @@ function Login() {
                     fullName: found?.fullName || "User",
                     email: email,
                     mobile: found?.mobile || "",
-                    username: found?.username || "",
                     role: "Customer"
                 };
                 localStorage.setItem("user", JSON.stringify(customerUser));
@@ -134,7 +132,7 @@ function Login() {
 
                 <div className="bg-[#111111] rounded-[10px] shadow-2xl pb-8 pt-8 px-8">
                     {/* General Errors */}
-                    {error && error !== "Please enter the username" && error !== "Please enter the password" && (
+                    {error && error !== "Please enter the email" && error !== "Please enter the password" && (
                         <div className="mb-6 p-3 bg-red-500/10 border border-red-500/20 text-red-500 rounded-md text-sm text-center">
                             {error}
                         </div>
@@ -189,9 +187,9 @@ function Login() {
                         </button>
 
                         {/* Validation Errors below the submit button as requested previously */}
-                        {error === "Please enter the username" && (
+                        {error === "Please enter the email" && (
                             <div className="text-red-500 text-sm font-medium mt-2 text-center">
-                                Please enter the username
+                                Please enter the email
                             </div>
                         )}
                         {error === "Please enter the password" && (
@@ -242,6 +240,8 @@ function Login() {
                         </button>
                     </div>
 
+                    {/* Sign Up temporarily disabled for public users. */}
+                    {/*
                     <div className="mt-6 text-center text-[13px] text-gray-400">
                         Don't have an account?
                         <button
@@ -251,6 +251,7 @@ function Login() {
                             Sign Up
                         </button>
                     </div>
+                    */}
                 </div>
             </div>
         </div>

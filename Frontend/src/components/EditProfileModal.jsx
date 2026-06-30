@@ -14,7 +14,6 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import SmartphoneIcon from "@mui/icons-material/Smartphone";
-import BadgeIcon from "@mui/icons-material/Badge";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -32,7 +31,6 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
   const [formData, setFormData] = useState({
     fullName: "",
     mobile: "",
-    username: "",
     password: "",
     confirmPassword: "",
   });
@@ -47,7 +45,6 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
       setFormData({
         fullName: user.fullName || "",
         mobile: user.mobile || "",
-        username: user.username || "",
         password: "",
         confirmPassword: "",
       });
@@ -67,7 +64,6 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
     if (!formData.fullName.trim()) return "Full Name is required";
     if (!formData.mobile.trim()) return "Mobile Number is required";
     if (!/^\d{10}$/.test(formData.mobile)) return "Mobile Number must be 10 digits";
-    if (!formData.username.trim()) return "Username is required";
     
     if (formData.password) {
       if (formData.password.length < 6) return "Password must be at least 6 characters";
@@ -184,26 +180,6 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
               />
             </Box>
 
-            <Box className="space-y-1">
-              <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1 flex items-center">
-                <BadgeIcon sx={{ fontSize: 14, mr: 0.5 }} /> Username
-              </label>
-              <TextField
-                fullWidth
-                name="username"
-                placeholder="Choose Username"
-                value={formData.username}
-                onChange={handleChange}
-                variant="outlined"
-                size="small"
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: "10px",
-                    backgroundColor: "grey.50"
-                  }
-                }}
-              />
-            </Box>
 
             <Box className="space-y-1">
               <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1 flex items-center">

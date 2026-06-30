@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Email, Google } from "@mui/icons-material";
 import signinImg from '../Images/Login_Image.jpg';
@@ -7,10 +7,14 @@ import { createUser } from "../Service/userApi";
 function Signup() {
     const navigate = useNavigate();
 
+    useEffect(() => {
+        // Sign Up is temporarily disabled. Redirect all access to login.
+        navigate('/', { replace: true });
+    }, [navigate]);
+
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [mobile, setMobile] = useState("");
-    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
@@ -19,7 +23,7 @@ function Signup() {
         e.preventDefault();
         setError("");
 
-        if (!name || !email || !mobile || !username || !password || !confirmPassword) {
+        if (!name || !email || !mobile || !password || !confirmPassword) {
             setError("All fields are required");
             return;
         }
@@ -58,20 +62,21 @@ function Signup() {
             fullName: name,
             email,
             mobile,
-            username,
             password
         };
 
-        createUser(userData)
-            .then((res) => {
-                const newUser = res.data.data;
-                navigate("/verify-email", { state: { user: newUser } });
-            })
-            .catch((err) => {
-                console.error("Registration failed:", err);
-                const msg = err?.response?.data?.message || "Registration failed. Please try again.";
-                setError(msg);
-            });
+        // Sign Up API call is disabled at the moment.
+        // createUser(userData)
+        //     .then((res) => {
+        //         const newUser = res.data.data;
+        //         navigate("/verify-email", { state: { user: newUser } });
+        //     })
+        //     .catch((err) => {
+        //         console.error("Registration failed:", err);
+        //         const msg = err?.response?.data?.message || "Registration failed. Please try again.";
+        //         setError(msg);
+        //     });
+        setError("Sign Up is temporarily disabled. Please contact the administrator.");
     };
 
     return (
@@ -98,6 +103,7 @@ function Signup() {
                         </div>
                     )}
 
+                    {/* Sign Up form is disabled until further notice. */}
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="space-y-1.5">
                             <label className="block text-[10px] font-bold text-pink-400 uppercase tracking-wider">
@@ -114,20 +120,6 @@ function Signup() {
                             />
                         </div>
 
-                        <div className="space-y-1.5">
-                            <label className="block text-[10px] font-bold text-pink-400 uppercase tracking-wider">
-                                Username
-                            </label>
-                            <input
-                                type="text"
-                                name="username"
-                                placeholder="username"
-                                value={username}
-                                // autoComplete="username"
-                                onChange={(e) => setUsername(e.target.value)}
-                                className="w-full bg-[#1A1F2B] text-gray-200 text-sm px-4 py-2.5 rounded-md border border-gray-700/50 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500 transition-colors placeholder:text-gray-500"
-                            />
-                        </div>
 
                         <div className="space-y-1.5">
                             <label className="block text-[10px] font-bold text-pink-400 uppercase tracking-wider">

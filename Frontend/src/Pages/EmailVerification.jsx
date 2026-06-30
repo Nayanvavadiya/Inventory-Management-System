@@ -52,7 +52,6 @@ const EmailVerification = () => {
                     fullName: user.fullName || "User",
                     email: user.email,
                     mobile: user.mobile || "",
-                    username: user.username || "",
                     role: "Customer"
                 }));
                 navigate('/dashboard');

@@ -48,7 +48,9 @@ function Navbar() {
             ) : (
               <>
                 <Link to="/" className="text-slate-300 hover:text-white text-[13px] font-bold uppercase tracking-wider transition-all">Login</Link>
+                {/* Sign Up temporarily disabled for public users.
                 <Link to="/signup" className="text-slate-300 hover:text-white text-[13px] font-bold uppercase tracking-wider transition-all">Sign Up</Link>
+                */}
               </>
             )}
           </div>

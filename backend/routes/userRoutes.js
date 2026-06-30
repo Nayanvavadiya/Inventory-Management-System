@@ -11,7 +11,8 @@ const {
   verifyOTP,
 } = require("../controllers/userController");
 
-router.post("/create", createUser);
+// Public sign up route is temporarily disabled.
+// router.post("/create", createUser);
 router.post("/verify", verifyOTP);
 router.post("/admin/create", adminCreateUser);
 router.get("/", getAllUsers);

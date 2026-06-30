@@ -1,11 +1,12 @@
 const User = require("../models/User");
 const transporter = require("../config/mailer");
 const otpGenerator = require("otp-generator");
+const bcrypt = require("bcrypt");
 
 // ================== CREATE USER (WITH OTP) ==================
 exports.createUser = async (req, res) => {
   try {
-    const { fullName, email, mobile, username, password } = req.body;
+    const { fullName, email, mobile, password } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -33,13 +34,15 @@ exports.createUser = async (req, res) => {
              <p>This OTP will expire in 5 minutes.</p>`,
     });
 
+    // Hash password before saving
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     // Create user with OTP
     const user = await User.create({
       fullName,
       email,
       mobile,
-      username,
-      password,
+      password: hashedPassword,
       otp,
       otpExpiry: Date.now() + 5 * 60 * 1000, // 5 minutes
       isVerified: false,
@@ -94,11 +97,13 @@ exports.adminCreateUser = async (req, res) => {
       });
     }
 
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const user = await User.create({
       fullName,
       email,
       mobile,
-      password,
+      password: hashedPassword,
       isVerified: true,
     });
 
@@ -178,7 +183,8 @@ exports.verifyOTP = async (req, res) => {
 // ================== GET ALL USERS ==================
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find();
+    // Exclude sensitive fields from the returned documents
+    const users = await User.find().select('-password -otp -otpExpiry');
 
     res.status(200).json({
       success: true,
@@ -196,7 +202,8 @@ exports.getAllUsers = async (req, res) => {
 // ================== GET SINGLE USER ==================
 exports.getUserById = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    // Exclude sensitive fields
+    const user = await User.findById(req.params.id).select('-password -otp -otpExpiry');
 
     if (!user) {
       return res.status(404).json({

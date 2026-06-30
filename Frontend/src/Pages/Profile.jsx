@@ -12,7 +12,6 @@ import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import SmartphoneIcon from '@mui/icons-material/Smartphone';
-import BadgeIcon from '@mui/icons-material/Badge';
 import EditProfileModal from "../components/EditProfileModal";
 import { updateUser } from "../Service/userApi";
 import { Snackbar, Alert } from "@mui/material";
@@ -157,21 +156,8 @@ function Profile() {
                 <p className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">{localUser?.email || 'user@example.com'}</p>
 
                 <div className="w-full mt-8 space-y-5 border-t border-gray-100 pt-6">
-                  <div className="flex items-start">
-                    <PersonOutlineIcon className="text-gray-400 mt-0.5 mr-3" style={{ fontSize: 20 }} />
-                    <div>
-                      <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Full Name</p>
-                      <p className="text-gray-900 font-medium">{localUser?.fullName || 'User Name'}</p>
-                    </div>
-                  </div>
 
-                  <div className="flex items-start">
-                    <BadgeIcon className="text-gray-400 mt-0.5 mr-3" style={{ fontSize: 20 }} />
-                    <div>
-                      <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Username</p>
-                      <p className="text-gray-900 font-medium">{localUser?.username || 'user'}</p>
-                    </div>
-                  </div>
+
 
                   <div className="flex items-start">
                     <SmartphoneIcon className="text-gray-400 mt-0.5 mr-3" style={{ fontSize: 20 }} />
