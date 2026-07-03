@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateProduct, deleteProduct, addProduct } from '../store/slices/productSlice';
 import EditProductModal from '../components/EditProductModal';
@@ -37,7 +38,8 @@ const imageMap = {
 };
 
 const Product = () => {
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const navigate = useNavigate();
+    const [isSidebarOpen, setIsSidebarOpen] = useState(() => window.innerWidth >= 1024);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All Categories');
     const [selectedStatus, setSelectedStatus] = useState('All Status');
@@ -122,7 +124,12 @@ const Product = () => {
                     {/* Header Top Section (mimicking Topbar integration for seamless look) */}
                     <div className="flex justify-between items-center mb-8 border-b pb-4 border-gray-200">
                         <div className="flex items-center space-x-3">
-                            <button className="p-2 hover:bg-gray-100 rounded-full text-gray-500 transition-colors">
+                            <button
+                                type="button"
+                                onClick={() => navigate(-1)}
+                                aria-label="Go back"
+                                className="p-2 hover:bg-gray-100 rounded-full text-gray-500 transition-colors"
+                            >
                                 <ArrowBackIcon fontSize="small" />
                             </button>
                             <div>
@@ -314,3 +321,4 @@ const Product = () => {
 };
 
 export default Product;
+

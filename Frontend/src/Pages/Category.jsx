@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Sidebar from '../components/Sidebar';
 import Topbar from '../components/Topbar';
 import CategoryTable from '../components/CategoryTable';
 import CategoryIcon from '@mui/icons-material/Category';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const Category = () => {
     console.log("Category Page Rendering");
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const navigate = useNavigate();
+    const [isSidebarOpen, setIsSidebarOpen] = useState(() => window.innerWidth >= 1024);
     const categories = useSelector((state) => state.category.categories);
 
 
@@ -38,6 +41,14 @@ const Category = () => {
                     {/* Page Header */}
                     <div className="mb-6 flex justify-between items-center">
                         <div className="flex items-center space-x-3">
+                            <button
+                                type="button"
+                                onClick={() => navigate(-1)}
+                                aria-label="Go back"
+                                className="p-2 hover:bg-gray-100 rounded-full text-gray-500 transition-colors"
+                            >
+                                <ArrowBackIcon fontSize="small" />
+                            </button>
                             <div className="p-3 bg-green-500 rounded-lg shadow-lg text-white">
                                 <CategoryIcon style={{ fontSize: 24 }} />
                             </div>
@@ -72,4 +83,5 @@ const Category = () => {
 };
 
 export default Category;
+
 

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { addOutgoing, updateOutgoing, deleteOutgoing } from '../store/slices/outgoingSlice';
 import Sidebar from '../components/Sidebar';
 import Topbar from '../components/Topbar';
 import OutputIcon from '@mui/icons-material/Output';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
@@ -21,7 +23,8 @@ import CordlessDrillImg from '../Images/Outgoing_image/Cordless Drill.jpg';
 import SafetyHelmetImg from '../Images/Outgoing_image/Safety Helmet.avif';
 
 const Outgoing = () => {
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const navigate = useNavigate();
+    const [isSidebarOpen, setIsSidebarOpen] = useState(() => window.innerWidth >= 1024);
     const [searchTerm, setSearchTerm] = useState('');
 
     const toggleSidebar = () => {
@@ -91,6 +94,14 @@ const Outgoing = () => {
                     {/* Page Header */}
                     <div className="mb-8 flex justify-between items-center bg-white p-5 rounded-xl shadow-sm border border-gray-100">
                         <div className="flex items-center space-x-4">
+                            <button
+                                type="button"
+                                onClick={() => navigate(-1)}
+                                aria-label="Go back"
+                                className="p-2 hover:bg-gray-100 rounded-full text-gray-500 transition-colors"
+                            >
+                                <ArrowBackIcon fontSize="small" />
+                            </button>
                             <div className="p-3 bg-orange-600 rounded-lg text-white shadow-md">
                                 <OutputIcon style={{ fontSize: 24 }} />
                             </div>
@@ -276,3 +287,4 @@ const Outgoing = () => {
 };
 
 export default Outgoing;
+
