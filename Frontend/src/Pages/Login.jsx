@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MailOutline } from "@mui/icons-material";
+import { MailOutline, Visibility, VisibilityOff } from "@mui/icons-material";
 import { getAllUsers } from "../Service/userApi";
 
 // asset import
@@ -10,6 +10,7 @@ function Login() {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState("");
 
     const handleSubmit = (e) => {
@@ -158,15 +159,25 @@ function Login() {
                             <label className="text-[11px] font-bold text-[#FB4C6E] uppercase tracking-wider block">
                                 Password
                             </label>
-                            <input
-                                type="password"
-                                name="password"
-                                placeholder="password"
-                                value={password}
-                                autoComplete="current-password"
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="w-full bg-[#1e232c] text-gray-200 text-sm px-4 py-3 rounded-md border border-[#2b303b] focus:outline-none focus:border-[#424959] transition-colors placeholder-[#636b7b]"
-                            />
+                            <div className="relative">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    name="password"
+                                    placeholder="password"
+                                    value={password}
+                                    autoComplete="current-password"
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    className="w-full bg-[#1e232c] text-gray-200 text-sm pl-4 pr-12 py-3 rounded-md border border-[#2b303b] focus:outline-none focus:border-[#424959] transition-colors placeholder-[#636b7b]"
+                                />
+                                <button
+                                    type="button"
+                                    aria-label={showPassword ? "Hide password" : "Show password"}
+                                    onClick={() => setShowPassword((show) => !show)}
+                                    className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-[#FB4C6E] transition-colors"
+                                >
+                                    {showPassword ? <VisibilityOff sx={{ fontSize: 20 }} /> : <Visibility sx={{ fontSize: 20 }} />}
+                                </button>
+                            </div>
                         </div>
 
                         <div className="flex items-center text-sm pt-1">
@@ -259,3 +270,5 @@ function Login() {
 }
 
 export default Login;
+
+
