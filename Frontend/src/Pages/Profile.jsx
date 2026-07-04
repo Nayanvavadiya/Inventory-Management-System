@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
@@ -8,6 +8,7 @@ import Users from "../Pages/Users";
 import { getAllUsers } from "../Service/userApi";
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -18,6 +19,7 @@ import { Snackbar, Alert } from "@mui/material";
 
 function Profile() {
   const location = useLocation();
+  const navigate = useNavigate();
   const storedUser = JSON.parse(localStorage.getItem("user")) || {};
 
   // Use location state if available, otherwise fallback to localStorage user
@@ -122,12 +124,21 @@ function Profile() {
           {/* Header Top Section (mimicking Topbar integration for seamless look) */}
           <div className="flex justify-between items-center mb-8 border-b pb-4 border-gray-200">
             <div className="flex items-center space-x-3">
-              <div className="p-2 bg-blue-100 rounded-lg text-blue-600">
-                <PersonOutlineIcon />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900 leading-tight">My Profile</h1>
-                <p className="text-sm text-gray-500">Manage your account details and settings</p>
+              <button
+                type="button"
+                onClick={() => navigate(-1)}
+                className="inline-flex items-center justify-center p-2 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 lg:hidden"
+              >
+                <ArrowBackIcon fontSize="small" />
+              </button>
+              <div className="flex items-center space-x-3">
+                <div className="p-2 bg-blue-100 rounded-lg text-blue-600">
+                  <PersonOutlineIcon />
+                </div>
+                <div>
+                  <h1 className="text-2xl font-bold text-gray-900 leading-tight">My Profile</h1>
+                  <p className="text-sm text-gray-500">Manage your account details and settings</p>
+                </div>
               </div>
             </div>
             <button
