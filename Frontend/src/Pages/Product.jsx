@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateProduct, deleteProduct, addProduct } from '../store/slices/productSlice';
+import { updateProduct, deleteProduct, addProduct, normalizeIds } from '../store/slices/productSlice';
 import EditProductModal from '../components/EditProductModal';
 import DeleteProductModal from '../components/DeleteProductModal';
 import AddProductModal from '../components/AddProductModal';
@@ -58,6 +58,10 @@ const Product = () => {
     const isAdmin = user.role === 'Admin';
 
     const products = useSelector((state) => state.product.products);
+
+    useEffect(() => {
+        dispatch(normalizeIds());
+    }, [dispatch]);
 
     const uniqueCategories = ["All Categories", ...new Set(products.map(p => p.category))];
     const uniqueStatuses = ["All Status", ...new Set(products.map(p => p.status))];

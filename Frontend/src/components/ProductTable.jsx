@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import EditIcon from '@mui/icons-material/Edit';
 import EditProductModal from './EditProductModal';
@@ -7,7 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 import SearchIcon from '@mui/icons-material/Search';
-import { updateProduct, deleteProduct, addProduct } from '../store/slices/productSlice';
+import { updateProduct, deleteProduct, addProduct, normalizeIds } from '../store/slices/productSlice';
 import AddProductModal from './AddProductModal';
 
 // Import images for mapping
@@ -45,6 +45,10 @@ const ProductTable = () => {
 
     // Get products from Redux
     const { products } = useSelector((state) => state.product);
+
+    useEffect(() => {
+        dispatch(normalizeIds());
+    }, [dispatch]);
 
     const handleEditClick = (product) => {
         if (!isAdmin) return;

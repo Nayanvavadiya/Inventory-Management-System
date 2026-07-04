@@ -14,7 +14,7 @@ import { getAllUsers } from '../Service/userApi';
 const StatCard = ({ title, value, icon, bgColor, trend, onClick }) => {
     return (
         <div 
-            className={`relative overflow-hidden rounded-2xl shadow-lg text-white p-5 h-40 flex flex-col justify-between ${bgColor} cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-xl active:scale-95 group`} 
+            className={`relative w-full overflow-hidden rounded-[26px] sm:rounded-2xl shadow-lg text-white p-3.5 sm:p-5 aspect-square sm:aspect-auto sm:h-40 flex flex-col justify-between ${bgColor} cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-xl active:scale-95 group`} 
             onClick={onClick}
         >
             {/* Background pattern/glass effect */}
@@ -22,17 +22,17 @@ const StatCard = ({ title, value, icon, bgColor, trend, onClick }) => {
 
             <div className="flex justify-between items-start z-10">
                 <div>
-                    <h3 className="text-4xl font-black tracking-tight">{value}</h3>
-                    <p className="text-[11px] font-bold uppercase tracking-wider mt-1 opacity-90">{title}</p>
+                    <h3 className="text-3xl sm:text-4xl font-black tracking-tight">{value}</h3>
+                    <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider mt-1 opacity-90 leading-tight">{title}</p>
                 </div>
-                <div className="p-3 bg-white/20 rounded-2xl backdrop-blur-md shadow-inner border border-white/10 group-hover:scale-110 transition-transform duration-300">
+                <div className="p-2 sm:p-3 bg-white/20 rounded-2xl backdrop-blur-md shadow-inner border border-white/10 group-hover:scale-110 transition-transform duration-300">
                     {React.cloneElement(icon, { style: { fontSize: 24, color: 'white' } })}
                 </div>
             </div>
 
             <div className="flex justify-between items-end z-10 pt-4">
-                <p className="text-[10px] font-semibold flex items-center bg-black/10 px-2 py-1 rounded-lg backdrop-blur-sm">
-                    <span className="mr-1.5 font-bold">{trend}</span> this month
+                <p className="text-[9px] sm:text-[10px] font-semibold flex items-center bg-black/10 px-2 py-1 rounded-lg backdrop-blur-sm">
+                    <span className="mr-1.5 font-bold">{trend}</span><span className="hidden sm:inline">this month</span>
                 </p>
                 <div className="text-white/80 group-hover:text-white transition-colors">
                     <ArrowForwardIcon style={{ fontSize: 16 }} />
@@ -85,7 +85,7 @@ const DashboardStats = () => {
     };
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
             {stats.map((stat, index) => (
                 <StatCard
                     key={index}

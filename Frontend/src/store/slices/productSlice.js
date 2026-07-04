@@ -1,14 +1,37 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { REHYDRATE } from 'redux-persist';
 
-// Import fallback images conceptually, but in Redux we usually store paths or base64. 
-// For this app, the paths were imported directly in Product.jsx. 
-// We will store just a string representing the image source or an empty string and handle imports there if needed.
-// Based on product.jsx, it uses image variables. We'll store string paths or identifiers, but to keep it simple, we can just use the previous raw objects without actual File imports in Redux, or rely on URL paths.
-// But wait, the previous code imported images (e.g. MacBookImg). We can't put imported variables in Redux state easily because they are modules.
-// For now, we omit the raw image strings from initial state or use placeholders. The user can continue uploading in the future.
-// But actually, we need to keep the UI looking exactly the same. So we can just put a placeholder path or we can use the same import in Product.jsx.
-// Because it's Redux, we should store serializable values. For initial state, we'll store specific string identifiers and map them in the component.
+// Only valid numeric product IDs should be used for display and sequencing.
+const isValidProductId = (id) => Number.isInteger(Number(id)) && Number(id) > 0 && Number(id) < 100000;
 
+const getNextProductId = (products) => {
+  const maxId = products.reduce((max, product) => {
+    const id = Number(product.id);
+    return isValidProductId(id) ? Math.max(max, id) : max;
+  }, 0);
+
+  return maxId + 1;
+};
+
+const normalizeProductIds = (products = []) => {
+  const usedIds = new Set();
+  let nextId = 1;
+
+  return products.map((product) => {
+    const id = Number(product.id);
+    if (isValidProductId(id) && !usedIds.has(id)) {
+      usedIds.add(id);
+      return { ...product, id };
+    }
+
+    while (usedIds.has(nextId)) {
+      nextId += 1;
+    }
+
+    usedIds.add(nextId);
+    return { ...product, id: nextId };
+  });
+};
 const initialState = {
   products: [
     { id: 1, name: 'MacBook Pro 16"', desc: 'Apple M3 Pro, 18GB RAM, 512GB SSD', price: '₹80,000', qty: 14, status: 'In Stock', category: 'Electronics', imageId: 'macbook' },
@@ -27,7 +50,13 @@ const productSlice = createSlice({
   initialState,
   reducers: {
     addProduct: (state, action) => {
-      state.products.push(action.payload);
+      state.products.push({
+        ...action.payload,
+        id: getNextProductId(state.products),
+      });
+    },
+    normalizeIds: (state) => {
+      state.products = normalizeProductIds(state.products);
     },
     updateProduct: (state, action) => {
       const index = state.products.findIndex(p => p.id === action.payload.id);
@@ -39,7 +68,15 @@ const productSlice = createSlice({
       state.products = state.products.filter(p => p.id !== action.payload);
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(REHYDRATE, (state, action) => {
+      const incoming = action.payload?.product?.products;
+      if (Array.isArray(incoming)) {
+        state.products = normalizeProductIds(incoming);
+      }
+    });
+  },
 });
 
-export const { addProduct, updateProduct, deleteProduct } = productSlice.actions;
+export const { addProduct, updateProduct, deleteProduct, normalizeIds } = productSlice.actions;
 export default productSlice.reducer;

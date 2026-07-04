@@ -45,7 +45,6 @@ const AddProductModal = ({ isOpen, onClose, onSave }) => {
         e.preventDefault();
         const newProduct = {
             ...formData,
-            id: Date.now(),
             price: formData.price.startsWith('₹') ? formData.price : `₹${formData.price}`,
             image: imageDataUrl || null,
         };
