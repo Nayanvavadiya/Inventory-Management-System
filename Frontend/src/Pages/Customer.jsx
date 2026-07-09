@@ -90,8 +90,8 @@ const Customer = () => {
 
                 <main className="flex-1 overflow-x-hidden overflow-y-auto bg-transparent p-6">
                     {/* Page Header */}
-                    <div className="mb-6 flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-                        <div className="flex items-center space-x-4">
+                    <div className="mb-6 flex flex-col sm:flex-row justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                        <div className="flex items-center space-x-4 flex-1 min-w-0">
                             <button
                                 type="button"
                                 onClick={() => navigate(-1)}
@@ -103,7 +103,7 @@ const Customer = () => {
                             <div className="p-3 bg-blue-500 rounded-lg text-white shadow-md">
                                 <PeopleIcon style={{ fontSize: 24 }} />
                             </div>
-                            <div>
+                            <div className="min-w-0">
                                 <h1 className="text-2xl font-bold text-gray-800">Customer Management</h1>
                                 <p className="text-sm text-gray-500">Manage your customers and their details</p>
                             </div>
@@ -111,7 +111,7 @@ const Customer = () => {
                         <button
                             onClick={() => setIsAddModalOpen(true)}
                             disabled={!isAdmin}
-                            className={`px-4 py-2.5 rounded-lg flex items-center text-sm font-medium transition-all shadow-sm ${isAdmin ? 'bg-blue-600 hover:bg-blue-700 text-white cursor-pointer active:scale-95' : 'bg-gray-100 text-gray-400 cursor-not-allowed opacity-70'}`}
+                            className={`flex-shrink-0 mt-3 sm:mt-0 px-4 py-2.5 rounded-lg flex items-center text-sm font-medium transition-all shadow-sm ${isAdmin ? 'bg-blue-600 hover:bg-blue-700 text-white cursor-pointer active:scale-95' : 'bg-gray-100 text-gray-400 cursor-not-allowed opacity-70'}`}
                         >
                             <AddIcon style={{ fontSize: 18, marginRight: 6 }} /> Add Customer
                         </button>

@@ -99,7 +99,7 @@ const CategoryTable = () => {
                 <table className="w-full text-left border-collapse">
                     <thead>
                         <tr className="bg-gray-100 border-y border-gray-200 text-gray-700 text-sm font-semibold">
-                            <th className="p-4 cursor-pointer hover:bg-gray-200">ID <UnfoldMoreIcon style={{ fontSize: 14, color: '#999' }} /></th>
+                            <th className="p-4 cursor-pointer hover:bg-gray-200"># <UnfoldMoreIcon style={{ fontSize: 14, color: '#999' }} /></th>
                             <th className="p-4 cursor-pointer hover:bg-gray-200">Name <UnfoldMoreIcon style={{ fontSize: 14, color: '#999' }} /></th>
                             <th className="p-4 cursor-pointer hover:bg-gray-200">Description <UnfoldMoreIcon style={{ fontSize: 14, color: '#999' }} /></th>
                             <th className="p-4 cursor-pointer hover:bg-gray-200">Status <UnfoldMoreIcon style={{ fontSize: 14, color: '#999' }} /></th>
@@ -107,9 +107,9 @@ const CategoryTable = () => {
                         </tr>
                     </thead>
                     <tbody className="text-gray-600 text-sm">
-                        {filteredCategories.map((category) => (
-                            <tr key={category.id} className="border-b border-gray-100 hover:bg-gray-50">
-                                <td className="p-4">{category.id}</td>
+                        {filteredCategories.map((category, index) => (
+                            <tr key={category.id ?? index} className="border-b border-gray-100 hover:bg-gray-50">
+                                <td className="p-4">{index + 1}</td>
                                 <td className="p-4 font-medium text-gray-800">{category.name}</td>
                                 <td className="p-4">{category.description}</td>
                                 <td className="p-4">
