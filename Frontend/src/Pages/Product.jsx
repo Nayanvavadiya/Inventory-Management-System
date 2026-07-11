@@ -151,24 +151,35 @@ const Product = () => {
                     </div>
 
                     {/* Summary Cards */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                        <div className="bg-white p-5 rounded-xl shadow-sm border-l-4 border-blue-500 flex flex-col justify-center">
-                            <p className="text-sm text-gray-500 mb-1">Total Products</p>
-                            <h3 className="text-2xl font-bold text-gray-900">{filteredProducts.length}</h3>
-                        </div>
-                        <div className="bg-white p-5 rounded-xl shadow-sm border-l-4 border-green-500 flex flex-col justify-center">
-                            <p className="text-sm text-gray-500 mb-1">Total Items</p>
-                            <h3 className="text-2xl font-bold text-gray-900">283</h3>
-                        </div>
-                        <div className="bg-white p-5 rounded-xl shadow-sm border-l-4 border-yellow-500 flex flex-col justify-center">
-                            <p className="text-sm text-gray-500 mb-1">Low Stock</p>
-                            <h3 className="text-2xl font-bold text-gray-900">2</h3>
-                        </div>
-                        <div className="bg-white p-5 rounded-xl shadow-sm border-l-4 border-purple-500 flex flex-col justify-center">
-                            <p className="text-sm text-gray-500 mb-1">Inventory Value</p>
-                            <h3 className="text-2xl font-bold text-gray-900">$256,498</h3>
-                        </div>
-                    </div>
+                    {(() => {
+                        const totalItems = products.reduce((sum, product) => sum + (product.qty || 0), 0);
+                        const lowStockCount = products.filter(p => p.status === 'Low Stock').length;
+                        const inventoryValue = products.reduce((sum, product) => {
+                            const priceNum = parseFloat(String(product.price).replace(/[₹,]/g, '')) || 0;
+                            return sum + (priceNum * (product.qty || 0));
+                        }, 0);
+                        
+                        return (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                                <div className="bg-white p-5 rounded-xl shadow-sm border-l-4 border-blue-500 flex flex-col justify-center">
+                                    <p className="text-sm text-gray-500 mb-1">Total Products</p>
+                                    <h3 className="text-2xl font-bold text-gray-900">{filteredProducts.length}</h3>
+                                </div>
+                                <div className="bg-white p-5 rounded-xl shadow-sm border-l-4 border-green-500 flex flex-col justify-center">
+                                    <p className="text-sm text-gray-500 mb-1">Total Items</p>
+                                    <h3 className="text-2xl font-bold text-gray-900">{totalItems}</h3>
+                                </div>
+                                <div className="bg-white p-5 rounded-xl shadow-sm border-l-4 border-yellow-500 flex flex-col justify-center">
+                                    <p className="text-sm text-gray-500 mb-1">Low Stock</p>
+                                    <h3 className="text-2xl font-bold text-gray-900">{lowStockCount}</h3>
+                                </div>
+                                <div className="bg-white p-5 rounded-xl shadow-sm border-l-4 border-purple-500 flex flex-col justify-center">
+                                    <p className="text-sm text-gray-500 mb-1">Inventory Value</p>
+                                    <h3 className="text-2xl font-bold text-gray-900">₹{inventoryValue.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</h3>
+                                </div>
+                            </div>
+                        );
+                    })()}
 
                     {/* Filters Section */}
                     <div className="flex flex-col md:flex-row gap-4 mb-6">
