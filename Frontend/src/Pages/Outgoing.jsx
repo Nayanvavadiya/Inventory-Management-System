@@ -24,7 +24,7 @@ import SafetyHelmetImg from '../Images/Outgoing_image/Safety Helmet.avif';
 
 const Outgoing = () => {
     const navigate = useNavigate();
-    const [isSidebarOpen, setIsSidebarOpen] = useState(() => window.innerWidth >= 1024);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
 
     const toggleSidebar = () => {

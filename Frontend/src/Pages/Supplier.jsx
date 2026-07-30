@@ -23,7 +23,7 @@ import logo5 from '../Images/supplier/logo_5.avif';
 
 const Supplier = () => {
     const navigate = useNavigate();
-    const [isSidebarOpen, setIsSidebarOpen] = useState(() => window.innerWidth >= 1024);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
 
     const toggleSidebar = () => {

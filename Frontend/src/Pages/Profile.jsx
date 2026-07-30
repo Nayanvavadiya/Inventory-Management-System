@@ -25,7 +25,7 @@ function Profile() {
   // Use location state if available, otherwise fallback to localStorage user
   const email = location.state?.email || storedUser.email || "";
   const [userName, setUserName] = useState(storedUser.fullName || "");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [localUser, setLocalUser] = useState(storedUser);
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });

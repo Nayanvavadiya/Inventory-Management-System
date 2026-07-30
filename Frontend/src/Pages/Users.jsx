@@ -15,7 +15,7 @@ import Topbar from "../components/Topbar";
 
 function Users({ isSubComponent = false }) {
   const navigate = useNavigate();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);

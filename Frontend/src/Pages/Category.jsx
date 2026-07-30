@@ -10,7 +10,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 const Category = () => {
     console.log("Category Page Rendering");
     const navigate = useNavigate();
-    const [isSidebarOpen, setIsSidebarOpen] = useState(() => window.innerWidth >= 1024);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const categories = useSelector((state) => state.category.categories);
 
 

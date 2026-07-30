@@ -5,7 +5,7 @@ import DashboardStats from '../components/DashboardStats';
 import ProductTable from '../components/ProductTable';
 
 const Dashboard = () => {
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
