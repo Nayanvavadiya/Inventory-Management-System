@@ -122,8 +122,10 @@ const Outgoing = () => {
                     {/* Stats section */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                         <div className="bg-white p-6 rounded-xl shadow-sm border-l-4 border-orange-600">
-                            <p className="text-sm text-gray-500 font-medium uppercase tracking-wide">Total Outgoing</p>
-                            <h3 className="text-2xl font-bold text-gray-900 mt-1">{outgoingRecords.length}</h3>
+                            <p className="text-sm text-gray-500 font-medium uppercase tracking-wide">Total Valuation</p>
+                            <h3 className="text-2xl font-bold text-gray-900 mt-1">
+                                ${outgoingRecords.reduce((acc, curr) => acc + (curr.totalAmount || 0), 0).toLocaleString()}
+                            </h3>
                         </div>
                         <div className="bg-white p-6 rounded-xl shadow-sm border-l-4 border-green-500">
                             <p className="text-sm text-gray-500 font-medium uppercase tracking-wide">Dispatched</p>
@@ -187,13 +189,13 @@ const Outgoing = () => {
                                     </div>
 
                                     {/* Record Details */}
-                                    <div className="p-5 flex flex-col flex-grow">
+                                    <div className="p-4 flex flex-col flex-grow">
                                         <div className="flex justify-between items-start mb-2">
                                             <div>
-                                                <h3 className="text-xs font-bold text-orange-600 uppercase tracking-wider">{record.id}</h3>
-                                                <p className="text-[11px] text-gray-400 font-medium">{record.date}</p>
+                                                <h3 className="text-[11px] font-bold text-orange-600 uppercase tracking-wide">{record.id}</h3>
+                                                <p className="text-[10px] text-gray-400">{record.date}</p>
                                             </div>
-                                            <span className={`px-2 py-0.5 text-[11px] font-semibold rounded-full ${record.status === 'Dispatched' ? 'bg-green-100 text-green-700' :
+                                            <span className={`px-2 py-0.5 text-[10px] font-semibold rounded-full ${record.status === 'Dispatched' ? 'bg-green-100 text-green-700' :
                                                 record.status === 'Pending' ? 'bg-yellow-100 text-yellow-700' :
                                                     'bg-red-100 text-red-700'
                                                 }`}>
@@ -201,37 +203,42 @@ const Outgoing = () => {
                                             </span>
                                         </div>
 
-                                        <h2 className="text-lg font-bold text-gray-900 truncate mb-1" title={record.product}>{record.product}</h2>
-                                        <p className="text-sm text-gray-600 font-medium mb-3">Customer: <span className="text-gray-800">{record.customer}</span></p>
+                                        <h2 className="text-sm font-bold text-gray-900 truncate mb-2" title={record.product}>{record.product}</h2>
+                                        <p className="text-xs text-gray-600 mb-3">Customer: <span className="text-gray-800">{record.customer}</span></p>
 
-                                        <div className="flex justify-between items-center mt-auto pt-4 border-t border-gray-50">
+                                        <div className="mb-2">
+                                            <p className="text-[9px] text-gray-400 uppercase font-bold tracking-tight">Total Amount</p>
+                                            <span className="text-xl font-black text-orange-600">${record.totalAmount || 0}</span>
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-2 text-xs mb-3">
                                             <div>
-                                                <p className="text-[10px] text-gray-400 uppercase font-bold tracking-tight">Quantity</p>
-                                                <span className="text-lg font-black text-gray-900">{record.quantity} units</span>
+                                                <p className="text-[9px] text-gray-400 uppercase font-bold tracking-tight">Quantity</p>
+                                                <span className="text-sm font-bold text-gray-700">{record.quantity} units</span>
                                             </div>
-                                            <div className="text-right">
-                                                <p className="text-[10px] text-gray-400 uppercase font-bold tracking-tight">Category</p>
-                                                <span className="text-xs font-bold text-gray-700 px-2 py-0.5 bg-gray-100 rounded">{record.category}</span>
+                                            <div>
+                                                <p className="text-[9px] text-gray-400 uppercase font-bold tracking-tight">Category</p>
+                                                <span className="text-xs font-bold text-gray-700">{record.category}</span>
                                             </div>
                                         </div>
 
                                         {/* Actions */}
-                                        <div className="grid grid-cols-2 gap-2 mt-5">
+                                        <div className="flex gap-2 mt-auto">
                                             <button
                                                 onClick={() => handleEditClick(record)}
                                                 disabled={!isAdmin}
-                                                className={`p-2 rounded-lg flex items-center justify-center transition-colors border ${isAdmin ? 'bg-gray-50 hover:bg-orange-50 text-gray-600 hover:text-orange-600 border-gray-200 hover:border-orange-200 cursor-pointer' : 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed opacity-60'}`}
+                                                className={`flex-1 p-2 rounded-lg flex items-center justify-center transition-colors border ${isAdmin ? 'bg-gray-50 hover:bg-orange-50 text-gray-600 hover:text-orange-600 border-gray-200 hover:border-orange-200 cursor-pointer' : 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed opacity-60'}`}
                                                 title="Edit"
                                             >
-                                                <EditOutlinedIcon style={{ fontSize: 18 }} />
+                                                <EditOutlinedIcon style={{ fontSize: 16 }} />
                                             </button>
                                             <button
                                                 onClick={() => handleDeleteClick(record)}
                                                 disabled={!isAdmin}
-                                                className={`p-2 rounded-lg flex items-center justify-center transition-colors border ${isAdmin ? 'bg-gray-50 hover:bg-red-50 text-gray-600 hover:text-red-500 border-gray-200 hover:border-red-200 cursor-pointer' : 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed opacity-60'}`}
+                                                className={`flex-1 p-2 rounded-lg flex items-center justify-center transition-colors border ${isAdmin ? 'bg-gray-50 hover:bg-red-50 text-gray-600 hover:text-red-500 border-gray-200 hover:border-red-200 cursor-pointer' : 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed opacity-60'}`}
                                                 title="Delete"
                                             >
-                                                <DeleteOutlineIcon style={{ fontSize: 18 }} />
+                                                <DeleteOutlineIcon style={{ fontSize: 16 }} />
                                             </button>
                                         </div>
                                     </div>

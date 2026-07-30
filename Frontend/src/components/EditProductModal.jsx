@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import CloseIcon from '@mui/icons-material/Close';
 
 const EditProductModal = ({ isOpen, onClose, product, onSave }) => {
+    const { categories } = useSelector((state) => state.category);
     const [formData, setFormData] = useState({
         name: '',
         desc: '',
@@ -13,10 +15,12 @@ const EditProductModal = ({ isOpen, onClose, product, onSave }) => {
 
     useEffect(() => {
         if (product) {
+            // Strip rupee symbol and commas from price for number input
+            const cleanPrice = String(product.price).replace(/[₹,]/g, '') || '';
             setFormData({
                 name: product.name,
                 desc: product.desc || '',
-                price: product.price,
+                price: cleanPrice,
                 qty: product.qty,
                 category: product.category,
                 status: product.status || 'In Stock'
@@ -102,14 +106,18 @@ const EditProductModal = ({ isOpen, onClose, product, onSave }) => {
                         <div className="flex gap-4">
                             <div className="flex-1">
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                                <input
-                                    type="text"
+                                <select
                                     name="category"
                                     value={formData.category}
                                     onChange={handleChange}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white cursor-pointer"
                                     required
-                                />
+                                >
+                                    <option value="">Select a category</option>
+                                    {categories.map((cat) => (
+                                        <option key={cat.id} value={cat.name}>{cat.name}</option>
+                                    ))}
+                                </select>
                             </div>
                             <div className="w-1/3">
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>

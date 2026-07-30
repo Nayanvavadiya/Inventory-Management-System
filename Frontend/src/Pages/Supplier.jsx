@@ -194,7 +194,6 @@ const Supplier = () => {
                                                         </div>
                                                         <div>
                                                             <div className="font-medium text-gray-900">{supplier.name}</div>
-                                                            <div className="text-xs text-gray-500 text-gray-500">ID: #{supplier.id}</div>
                                                         </div>
                                                     </div>
                                                 </td>

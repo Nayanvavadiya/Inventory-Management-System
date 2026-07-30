@@ -204,7 +204,8 @@ const Purchase = () => {
                                         </div>
 
                                         <h2 className="text-lg font-bold text-gray-900 truncate mb-1" title={purchase.product}>{purchase.product}</h2>
-                                        <p className="text-sm text-gray-600 font-medium mb-3">Supplier: <span className="text-gray-800">{purchase.supplier}</span></p>
+                                        <p className="text-sm text-gray-600 font-medium mb-1">Supplier: <span className="text-gray-800">{purchase.supplier}</span></p>
+                                        <p className="text-sm text-gray-600 font-medium mb-3">Category: <span className="text-gray-800">{purchase.category}</span></p>
 
                                         <div className="flex justify-between items-center mt-auto pt-4 border-t border-gray-50">
                                             <div>

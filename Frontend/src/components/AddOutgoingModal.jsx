@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import CloseIcon from '@mui/icons-material/Close';
 
 const AddOutgoingModal = ({ isOpen, onClose, onAdd }) => {
+    const { categories } = useSelector((state) => state.category);
     const [formData, setFormData] = useState({
         customer: '',
         product: '',
         quantity: 0,
+        totalAmount: 0,
         category: '',
         status: 'Pending'
     });
@@ -16,7 +19,7 @@ const AddOutgoingModal = ({ isOpen, onClose, onAdd }) => {
         const { name, value } = e.target;
         setFormData({
             ...formData,
-            [name]: name === 'quantity' ? Number(value) : value
+            [name]: (name === 'quantity' || name === 'totalAmount') ? Number(value) : value
         });
     };
 
@@ -37,6 +40,7 @@ const AddOutgoingModal = ({ isOpen, onClose, onAdd }) => {
             customer: '',
             product: '',
             quantity: 0,
+            totalAmount: 0,
             category: '',
             status: 'Pending'
         });
@@ -93,30 +97,47 @@ const AddOutgoingModal = ({ isOpen, onClose, onAdd }) => {
                                 />
                             </div>
                             <div className="flex-1">
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                                <select
-                                    name="status"
-                                    value={formData.status}
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Total Amount ($)</label>
+                                <input
+                                    type="number"
+                                    name="totalAmount"
+                                    value={formData.totalAmount === 0 ? '' : formData.totalAmount}
                                     onChange={handleChange}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all bg-white cursor-pointer"
-                                >
-                                    <option value="Dispatched">Dispatched</option>
-                                    <option value="Pending">Pending</option>
-                                    <option value="Canceled">Canceled</option>
-                                </select>
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"
+                                    required
+                                    min="0"
+                                />
                             </div>
                         </div>
 
                         <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                            <select
+                                name="status"
+                                value={formData.status}
+                                onChange={handleChange}
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all bg-white cursor-pointer"
+                            >
+                                <option value="Dispatched">Dispatched</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Canceled">Canceled</option>
+                            </select>
+                        </div>
+
+                        <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                            <input
-                                type="text"
+                            <select
                                 name="category"
                                 value={formData.category}
                                 onChange={handleChange}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-all bg-white cursor-pointer"
                                 required
-                            />
+                            >
+                                <option value="">Select a category</option>
+                                {categories.map((cat) => (
+                                    <option key={cat.id} value={cat.name}>{cat.name}</option>
+                                ))}
+                            </select>
                         </div>
                     </div>
 
