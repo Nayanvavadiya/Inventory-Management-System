@@ -29,7 +29,7 @@ const AddCategoryModal = ({ isOpen, onClose, onSave }) => {
     };
 
     return (
-        <div className="fixed inset-0 z-[500] flex items-center justify-center bg-black/50 transition-opacity">
+        <div className="fixed inset-0 z-[500] flex items-center justify-center bg-black/70 backdrop-blur-sm transition-opacity">
             <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden" onClick={(e) => e.stopPropagation()}>
                 <div className="flex justify-between items-center p-5 border-b border-gray-100 bg-gray-50">
                     <h2 className="text-xl font-bold text-gray-800">Add New Category</h2>

@@ -40,7 +40,7 @@ const EditProductModal = ({ isOpen, onClose, product, onSave }) => {
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 transition-opacity">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm transition-opacity">
             <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden animate-fade-in-up">
                 <div className="flex justify-between items-center p-5 border-b border-gray-100 bg-gray-50">
                     <h2 className="text-xl font-bold text-gray-800">Edit Product</h2>

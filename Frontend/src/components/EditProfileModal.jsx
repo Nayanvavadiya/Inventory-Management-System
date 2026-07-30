@@ -121,6 +121,12 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
           padding: "8px"
         }
       }}
+      BackdropProps={{
+        sx: {
+          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          backdropFilter: 'blur(4px)',
+        },
+      }}
     >
       <DialogTitle sx={{ m: 0, p: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <Typography variant="h6" component="span" fontWeight="bold"> Edit Profile </Typography>
