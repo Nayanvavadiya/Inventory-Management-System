@@ -4,6 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 const EditPurchaseModal = ({ isOpen, onClose, purchase, onSave }) => {
     const { categories } = useSelector((state) => state.category);
+    const { suppliers } = useSelector((state) => state.supplier);
     const [formData, setFormData] = useState({
         supplier: '',
         product: '',
@@ -56,14 +57,18 @@ const EditPurchaseModal = ({ isOpen, onClose, purchase, onSave }) => {
                     <div className="space-y-4">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Supplier</label>
-                            <input
-                                type="text"
+                            <select
                                 name="supplier"
                                 value={formData.supplier}
                                 onChange={handleChange}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all bg-white cursor-pointer"
                                 required
-                            />
+                            >
+                                <option value="">Select a supplier</option>
+                                {suppliers.map((supplier) => (
+                                    <option key={supplier.id} value={supplier.name}>{supplier.name}</option>
+                                ))}
+                            </select>
                         </div>
                         
                         <div>
